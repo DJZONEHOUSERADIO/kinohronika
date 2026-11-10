@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """Кинохроника — новини, кино и телевизия от български и руски източници."""
+import json
 import os
 import sys
 import time
+from urllib.parse import quote, urlparse
 
 import xbmc
 import xbmcaddon
@@ -331,13 +333,71 @@ def tv_st():
 
 
 def tv_st_play(slug):
+    site = content.sources()["tv"]["smotret"]["site"]
+    channel_url = "%s/%s" % (site.rstrip("/"), slug)
     try:
-        url = providers.smotret_stream(slug)
+        sources = providers.smotret_streams(slug)
+        if not sources:
+            raise RuntimeError("Няма намерени потоци за канала.")
+        selected = sources[0]
+        if len(sources) > 1:
+            choice = xbmcgui.Dialog().select(
+                "Избери стрийм за възпроизвеждане",
+                [item["label"] for item in sources],
+            )
+            if choice < 0:
+                xbmcplugin.setResolvedUrl(HANDLE, False, xbmcgui.ListItem())
+                return
+            selected = sources[choice]
+        resolved = providers.smotret_stream(slug, source=selected["url"])
     except Exception as exc:
         ui.notify(str(exc))
         xbmcplugin.setResolvedUrl(HANDLE, False, xbmcgui.ListItem())
         return
-    _play_url(url)
+
+    stream = (resolved.get("url") if isinstance(resolved, dict) else resolved) or ""
+    headers = (resolved.get("headers") if isinstance(resolved, dict) else {}) or {}
+    if not stream:
+        ui.notify("Избраният плеър не върна видео поток")
+        xbmcplugin.setResolvedUrl(HANDLE, False, xbmcgui.ListItem())
+        return
+    stream_type = "hls" if ".m3u8" in stream.lower() else "mp4"
+    tv_st_play_stream(stream, stream_type, json.dumps(headers),
+                      title=selected.get("label") or channel_url)
+
+
+def tv_st_play_stream(stream, stream_type="", headers_json="{}", title="smotret.tv"):
+    if not stream:
+        xbmcplugin.setResolvedUrl(HANDLE, False, xbmcgui.ListItem())
+        return
+    try:
+        headers = json.loads(headers_json or "{}")
+        if not isinstance(headers, dict):
+            headers = {}
+    except ValueError:
+        headers = {}
+    header_string = "&".join("%s=%s" % (key, quote(str(value), safe=""))
+                             for key, value in headers.items())
+    item = xbmcgui.ListItem(label=title, path=stream)
+    item.setProperty("IsPlayable", "true")
+    path = urlparse(stream).path.lower()
+    kind = (stream_type or "").lower()
+    manifest = "hls" if kind == "hls" or path.endswith(".m3u8") else (
+        "mpd" if kind == "mpd" or path.endswith(".mpd") else "")
+    if manifest:
+        item.setMimeType("application/vnd.apple.mpegurl" if manifest == "hls" else "application/dash+xml")
+        item.setContentLookup(False)
+        try:
+            xbmcaddon.Addon("inputstream.adaptive")
+            item.setProperty("inputstream", "inputstream.adaptive")
+            item.setProperty("inputstream.adaptive.manifest_type", manifest)
+            item.setProperty("inputstream.adaptive.stream_headers", header_string)
+            item.setProperty("inputstream.adaptive.manifest_headers", header_string)
+        except Exception:
+            item.setPath(stream + ("|" + header_string if header_string else ""))
+    elif header_string:
+        item.setPath(stream + "|" + header_string)
+    xbmcplugin.setResolvedUrl(HANDLE, True, item)
 
 
 def ia_list(key, page):
@@ -607,6 +667,10 @@ def dispatch():
             tv_st()
         elif action == "tv_st_play":
             tv_st_play(PARAMS.get("slug", ""))
+        elif action == "tv_st_play_stream":
+            tv_st_play_stream(PARAMS.get("stream", ""),
+                              PARAMS.get("stream_type", ""),
+                              PARAMS.get("headers", "{}"))
         elif action == "ia_list":
             ia_list(PARAMS.get("key", "features"), int(PARAMS.get("page", 1)))
         elif action == "ia_play":

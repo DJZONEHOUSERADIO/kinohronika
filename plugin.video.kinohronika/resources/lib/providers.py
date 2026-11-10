@@ -10,6 +10,7 @@ import re
 
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
+from urllib.parse import urljoin, urlparse
 
 import content
 import util
@@ -150,49 +151,22 @@ def smotret_channels():
     return channels
 
 
-def _rutube_stream(embed):
-    video_id = re.search(r"/embed/([0-9a-f]+)", embed)
-    if not video_id:
-        raise RuntimeError("Непознат Rutube плейър.")
-    api = "https://rutube.ru/api/play/options/%s/?format=json" % video_id.group(1)
-    payload = util.http_json(api, ttl=600, headers={"Referer": "https://rutube.ru/"})
-    for stream in (payload.get("live_streams") or {}).get("hls") or []:
-        if stream.get("url"):
-            return stream["url"]
-    raise RuntimeError("Rutube не дава HLS адрес за този канал.")
+def smotret_streams(slug):
+    """Return source candidates exactly as the standalone Smotret add-on does."""
+    from kinogo.smotret.scraper import SmotretScraper
 
-
-def _ok_stream(embed):
-    page = util.http_get(embed, ttl=600, headers={"Referer": "https://smotret.tv/"})
-    for pattern in ("hlsMasterPlaylistUrl", "hlsPlaybackMasterPlaylistUrl"):
-        match = re.search(pattern + r'&quot;:&quot;([^&]+)&quot;', page)
-        if match:
-            return htmllib.unescape(match.group(1))
-    raise RuntimeError("OK.ru не дава HLS адрес за този канал.")
-
-
-def smotret_stream(slug):
-    """Разрешaва плейъра на smotret.tv до директен HLS адрес."""
     site = _cfg()["smotret"]["site"]
-    page = util.http_get("%s/%s" % (site, slug), ttl=1800)
-    player_path = re.search(r'src="(/[^"]+\.html)"', page)
-    if not player_path:
-        raise RuntimeError("Каналът няма вграден плейър.")
-    player = util.http_get(site + player_path.group(1), ttl=900)
+    channel_url = "%s/%s" % (site.rstrip("/"), slug)
+    return SmotretScraper().get_channel_sources(channel_url)
 
-    direct = re.findall(r'https?://[^"\' ]+\.m3u8[^"\' ]*', player)
-    if direct:
-        return direct[0]
 
-    iframe = re.search(r'<iframe[^>]+src="([^"]+)"', player)
-    if not iframe:
-        raise RuntimeError("Плейърът на канала е празен.")
-    embed = htmllib.unescape(iframe.group(1))
-    if "rutube" in embed:
-        return _rutube_stream(embed)
-    if "ok.ru" in embed:
-        return _ok_stream(embed)
-    raise RuntimeError("Плейърът (%s) не се поддържа в Kodi." % embed.split("/")[2])
+def smotret_stream(slug, source=None):
+    """Resolve the selected smotret.tv source using the bundled resolver."""
+    from kinogo.smotret.scraper import SmotretScraper
+
+    site = _cfg()["smotret"]["site"]
+    channel_url = "%s/%s" % (site.rstrip("/"), slug)
+    return SmotretScraper().get_video_stream(channel_url, source=source)
 
 
 # ------------------------------------------------------------------- проверка

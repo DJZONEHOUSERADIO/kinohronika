@@ -7,7 +7,7 @@
 Unofficial community Kodi add-on for **news, cinema, television and radio** from Bulgarian and Russian sources — with a daily programme shaped like an old cinema bill.
 
 **Add-on ID:** `plugin.video.kinohronika`  
-**Version:** 1.0.1  
+**Version:** 1.0.4  
 **Requires:** Kodi 19 (Matrix) or newer
 
 ---
@@ -24,7 +24,7 @@ Unofficial community Kodi add-on for **news, cinema, television and radio** from
 - **Cinema & animation** — public collections on [archive.org](https://archive.org), plus official YouTube channels from Mosfilm, Soyuzmultfilm, Gosteleradiofond, BNT and Belarusfilm.
 - **Live TV & series** — channels and catalogue from SMOTRIM and smotret.tv.
 - **Live radio** — Bulgarian National Radio (BNR) programmes.
-- **KinoGo catalogue** — new titles, premieres, films and series by genre, anime, animation, TV shows, collections and search, with seasons/episodes where available. The add-on picks a working mirror (`kinogo.org` / `kinogo.la`) and uses built-in resolvers for supported players.
+- **KinoGo catalogue** — new titles, premieres, films and series by genre, anime, animation, TV shows, collections and search, with seasons/episodes where available. The add-on picks a working mirror (`kinogo.org` / `kinogo.la`), discovers sources via a smotret-style pipeline (direct streams, embedded players, mirror pages), shows a Kodi chooser when several sources are available, and resolves the selection with the right headers (including VK Video and OK.ru).
 - **Languages** — Bulgarian, English and Russian UI strings.
 
 ---
@@ -33,7 +33,7 @@ Unofficial community Kodi add-on for **news, cinema, television and radio** from
 
 ### From GitHub Release (recommended)
 
-1. Download **`plugin.video.kinohronika-1.0.1.zip`** from the [Releases](https://github.com/DJZONEHOUSERADIO/kinohronika/releases) page.
+1. Download **`plugin.video.kinohronika-1.0.4.zip`** from the [Releases](https://github.com/DJZONEHOUSERADIO/kinohronika/releases) page.
 2. In Kodi: **Add-ons → Install from zip file** → select the zip.
 3. Optional: install **YouTube** (`plugin.video.youtube`) for studio-channel playback, and **InputStream Adaptive** for HLS.
 

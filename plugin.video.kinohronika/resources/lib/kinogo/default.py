@@ -8,8 +8,9 @@ Routes:
 
 from __future__ import annotations
 
+import json
 import sys
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 import xbmc
 import xbmcaddon
@@ -18,6 +19,7 @@ import xbmcplugin
 
 from . import utils
 from .scraper import FILM_GENRES, SERIAL_GENRES, KinogoScraper, ScraperError
+from .resolvers import HostResolvers, ResolveError
 
 HANDLE = int(sys.argv[1]) if len(sys.argv) > 1 else -1
 
@@ -44,6 +46,8 @@ def main():
             list_episodes(params)
         elif action == "play":
             play_video(params)
+        elif action == "streams":
+            list_streams(params)
         else:
             root_menu()
     except ScraperError as exc:
@@ -168,6 +172,21 @@ def do_search(params):
     xbmcplugin.endOfDirectory(HANDLE)
 
 
+def _add_source_choice(source, item_url, title):
+    embed = source.get("embed") or ""
+    label = source.get("label") or "Player"
+    list_item = xbmcgui.ListItem(label=label)
+    list_item.setProperty("IsPlayable", "false" if HostResolvers.supports_stream_choice(embed) else "true")
+    is_picker = HostResolvers.supports_stream_choice(embed)
+    target = utils.build_url({
+        "action": "streams" if is_picker else "play",
+        "url": item_url,
+        "embed": embed,
+        "title": title,
+    })
+    xbmcplugin.addDirectoryItem(HANDLE, target, list_item, isFolder=is_picker)
+
+
 def open_item(params):
     """Open movie/series: seasons folder if serial player, else source picker / play."""
     url = (params.get("url") or "").strip()
@@ -211,16 +230,7 @@ def open_item(params):
         # Also offer alternate players if any
         if len(sources) > 1:
             for source in sources[1:]:
-                list_item = xbmcgui.ListItem(label=source["label"])
-                list_item.setProperty("IsPlayable", "true")
-                xbmcplugin.addDirectoryItem(
-                    HANDLE,
-                    utils.build_url(
-                        {"action": "play", "url": url, "embed": source["embed"]}
-                    ),
-                    list_item,
-                    isFolder=False,
-                )
+                _add_source_choice(source, url, detail.get("title") or source.get("label") or "KinoGo")
         xbmcplugin.endOfDirectory(HANDLE)
         return
 
@@ -241,17 +251,55 @@ def open_item(params):
                 "mediatype": "movie",
             },
         )
+        if scraper.resolvers.supports_stream_choice(source["embed"]):
+            list_item.setProperty("IsPlayable", "false")
+            target = utils.build_url({
+                "action": "streams", "url": url, "embed": source["embed"],
+                "title": detail.get("title") or label,
+            })
+            xbmcplugin.addDirectoryItem(HANDLE, target, list_item, isFolder=True)
+        else:
+            list_item.setProperty("IsPlayable", "true")
+            xbmcplugin.addDirectoryItem(
+                HANDLE,
+                utils.build_url({
+                    "action": "play", "url": url, "embed": source["embed"],
+                    "title": detail.get("title") or "",
+                }),
+                list_item,
+                isFolder=False,
+            )
+    xbmcplugin.endOfDirectory(HANDLE)
+
+
+def list_streams(params):
+    embed = (params.get("embed") or "").strip()
+    item_url = (params.get("url") or "").strip()
+    title = (params.get("title") or "KinoGo").strip()
+    if not embed:
+        raise ScraperError("Липсва адрес на VK/OK плейъра")
+    scraper = KinogoScraper()
+    try:
+        streams = scraper.resolvers.get_streams(embed, referer=item_url or None)
+    except ResolveError as exc:
+        raise ScraperError(str(exc)) from exc
+
+    xbmcplugin.setContent(HANDLE, "videos")
+    for stream in streams:
+        label = stream["label"]
+        list_item = xbmcgui.ListItem(label=label)
+        list_item.setArt({"icon": utils.ADDON_ICON, "thumb": utils.ADDON_ICON,
+                          "fanart": utils.ADDON_ICON})
+        list_item.setInfo("video", {"title": title, "mediatype": "video", "plot": embed})
         list_item.setProperty("IsPlayable", "true")
         xbmcplugin.addDirectoryItem(
             HANDLE,
-            utils.build_url(
-                {
-                    "action": "play",
-                    "url": url,
-                    "embed": source["embed"],
-                    "title": detail.get("title") or "",
-                }
-            ),
+            utils.build_url({
+                "action": "play", "url": item_url, "embed": embed,
+                "stream": stream["url"], "stream_type": stream.get("type", ""),
+                "stream_headers": json.dumps(stream.get("headers") or {}),
+                "title": title,
+            }),
             list_item,
             isFolder=False,
         )
@@ -332,7 +380,14 @@ def play_video(params):
     season = (params.get("season") or "").strip() or None
     episode = (params.get("episode") or "").strip() or None
     stream = (params.get("stream") or "").strip()
+    stream_type = (params.get("stream_type") or "").strip().lower()
     title = (params.get("title") or "").strip()
+    try:
+        selected_headers = json.loads(params.get("stream_headers") or "{}")
+        if not isinstance(selected_headers, dict):
+            selected_headers = {}
+    except ValueError:
+        selected_headers = {}
 
     scraper = KinogoScraper()
     header_map = {
@@ -341,9 +396,10 @@ def play_video(params):
     }
 
     try:
-        if stream and ".m3u8" in stream.lower():
+        if stream:
             resolved_url = stream
-            header_map["Referer"] = embed or item_url or header_map["Referer"]
+            header_map.update(selected_headers)
+            header_map["Referer"] = selected_headers.get("Referer") or embed or item_url or header_map["Referer"]
         else:
             resolved = scraper.get_stream(
                 item_url, embed=embed or None, season=season, episode=episode
@@ -368,15 +424,18 @@ def play_video(params):
         list_item.setInfo("video", {"title": title, "mediatype": "video"})
 
     headers = "&".join(f"{k}={quote(str(v), safe='')}" for k, v in header_map.items())
-    is_hls = ".m3u8" in resolved_url.lower()
+    stream_path = urlparse(resolved_url).path.lower()
+    manifest_type = "hls" if (stream_type == "hls" or stream_path.endswith(".m3u8")) else ("mpd" if (stream_type == "mpd" or stream_path.endswith(".mpd")) else "")
+    if stream_type == "mp4" and not manifest_type:
+        list_item.setMimeType("video/mp4")
 
-    if is_hls:
-        list_item.setMimeType("application/vnd.apple.mpegurl")
+    if manifest_type:
+        list_item.setMimeType("application/vnd.apple.mpegurl" if manifest_type == "hls" else "application/dash+xml")
         list_item.setContentLookup(False)
         try:
             xbmcaddon.Addon("inputstream.adaptive")
             list_item.setProperty("inputstream", "inputstream.adaptive")
-            list_item.setProperty("inputstream.adaptive.manifest_type", "hls")
+            list_item.setProperty("inputstream.adaptive.manifest_type", manifest_type)
             list_item.setProperty("inputstream.adaptive.stream_headers", headers)
             list_item.setProperty("inputstream.adaptive.manifest_headers", headers)
         except Exception:  # noqa: BLE001

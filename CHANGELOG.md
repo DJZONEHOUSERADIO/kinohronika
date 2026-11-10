@@ -2,6 +2,16 @@
 
 All notable changes to the **Kinohronika** Kodi add-on (`plugin.video.kinohronika`) are documented here.
 
+## [1.0.4] — 2026-11-10
+
+### Added
+- Source discovery method ported from `plugin.video.smotret`: direct streams, embedded players and mirror pages
+- Native Kodi dialog when more than one playable source is found, so the user can choose which stream to start
+- Selected sources are resolved with the matching HTTP headers and resolver
+
+### Changed
+- KinoGo playback pipeline uses the new smotret-style discovery while keeping VK Video and OK.ru support from the previous release
+
 ## [1.0.1] — 2026-11-10
 
 ### Added
