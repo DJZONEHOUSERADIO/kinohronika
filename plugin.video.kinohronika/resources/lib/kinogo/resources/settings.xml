@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="30001">
+        <setting id="debug" type="bool" label="30002" default="false"/>
+        <setting id="timeout" type="slider" label="30003" default="30" range="10,5,60" option="int"/>
+        <setting id="cache_ttl" type="slider" label="30004" default="30" range="0,5,120" option="int"/>
+        <setting id="mirror" type="select" label="30005" values="auto|kinogo.org|kinogo.la" default="auto"/>
+    </category>
+</settings>

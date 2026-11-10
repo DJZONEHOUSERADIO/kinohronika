@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.pyo
+.DS_Store
+*.zip
+!plugin.video.kinohronika-*.zip
+.idea/
+.vscode/
+*.swp
+*~

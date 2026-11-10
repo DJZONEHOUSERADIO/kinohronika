@@ -1,0 +1,290 @@
+{
+  "_comment": "Всички адреси са официални публични канали: RSS емисии, канали в YouTube на притежателите на правата и archive.org (обществено достояние). Няма скрейпнати или пиратски каталози.",
+  "news": [
+    {
+      "id": "dnevnik",
+      "name": "Дневник",
+      "country": "bg",
+      "url": "https://www.dnevnik.bg/rss/"
+    },
+    {
+      "id": "capital",
+      "name": "Капитал",
+      "country": "bg",
+      "url": "https://www.capital.bg/rss/"
+    },
+    {
+      "id": "mediapool",
+      "name": "Медиапул",
+      "country": "bg",
+      "url": "https://www.mediapool.bg/rss"
+    },
+    {
+      "id": "sega",
+      "name": "Сега",
+      "country": "bg",
+      "url": "https://www.segabg.com/rss"
+    },
+    {
+      "id": "novinite",
+      "name": "Новините",
+      "country": "bg",
+      "url": "https://novinite.bg/rss"
+    },
+    {
+      "id": "24chasa",
+      "name": "24 часа",
+      "country": "bg",
+      "url": "https://www.24chasa.bg/rss"
+    },
+    {
+      "id": "darik",
+      "name": "Дарик",
+      "country": "bg",
+      "url": "https://dariknews.bg/rss.php"
+    },
+    {
+      "id": "actualno",
+      "name": "Актуално",
+      "country": "bg",
+      "url": "https://www.actualno.com/rss"
+    },
+    {
+      "id": "meduza",
+      "name": "Медуза",
+      "country": "ru",
+      "url": "https://meduza.io/rss/all"
+    },
+    {
+      "id": "rbc",
+      "name": "РБК",
+      "country": "ru",
+      "url": "https://rssexport.rbc.ru/rbcnews/news/30/full.rss"
+    },
+    {
+      "id": "kommersant",
+      "name": "Комерсант",
+      "country": "ru",
+      "url": "https://www.kommersant.ru/RSS/news.xml"
+    },
+    {
+      "id": "tass",
+      "name": "ТАСС",
+      "country": "ru",
+      "url": "https://tass.ru/rss/v2.xml"
+    },
+    {
+      "id": "lenta",
+      "name": "Лента",
+      "country": "ru",
+      "url": "https://lenta.ru/rss"
+    }
+  ],
+  "youtube": [
+    {
+      "id": "mosfilm",
+      "name": "Мосфилм",
+      "user": "mosfilm",
+      "note": "Официален канал на киностудията, пълни филми безплатно"
+    },
+    {
+      "id": "soyuzmultfilm",
+      "name": "Союзмултфилм",
+      "channel_id": "UCHS2LM1n3f5cyL-ebgkqyLw",
+      "note": "Официален канал на анимационното студио"
+    },
+    {
+      "id": "gtrf_tv",
+      "name": "Съветска телевизия (ГТРФ)",
+      "channel_id": "UCiVZttFkdEwMi3QXpRqFTzQ",
+      "note": "Държавен фонд на телевизията"
+    },
+    {
+      "id": "gtrf_radio",
+      "name": "Съветско радио (ГТРФ)",
+      "channel_id": "UCM6oyrdQzBf-egEmlkJyQNg",
+      "note": "Държавен фонд на радиото"
+    },
+    {
+      "id": "bnt",
+      "name": "БНТ",
+      "channel_id": "UC8jnuRbBzMICRHsC0qqVd9Q",
+      "note": "Официален канал на Българската национална телевизия"
+    },
+    {
+      "id": "belarusfilm",
+      "name": "Беларусьфилм",
+      "user": "belarusfilm",
+      "note": "Официален канал на студията"
+    }
+  ],
+  "archive": {
+    "features": {
+      "name": "Съветска класика",
+      "query": "collection:feature_films AND language:Russian AND date:[1910-01-01 TO 1991-12-31] AND -subject:\"American television\"",
+      "sort": "downloads desc",
+      "note": "Пълнометражни филми от колекцията feature_films на archive.org"
+    },
+    "cartoons": {
+      "name": "Анимация",
+      "query": "collection:animationandcartoons AND language:Russian",
+      "sort": "downloads desc",
+      "note": "Анимационни филми от колекцията animationandcartoons"
+    },
+    "silent": {
+      "name": "Ранно кино (до 1935)",
+      "query": "collection:feature_films AND language:Russian AND date:[1910-01-01 TO 1935-12-31]",
+      "sort": "downloads desc",
+      "note": "Ранно кино от feature_films"
+    },
+    "newsreel": {
+      "name": "Време · съветски новини",
+      "query": "collection:classic_tv AND language:Russian",
+      "sort": "downloads desc",
+      "note": "Архивни емисии на съветската телевизия"
+    }
+  },
+  "radio": [
+    {
+      "id": "horizont",
+      "name": "БНР · Хоризонт",
+      "url": "https://lb-hls.cdn.bg/2032/fls/Horizont.stream/playlist.m3u8"
+    },
+    {
+      "id": "botev",
+      "name": "БНР · Христо Ботев",
+      "url": "https://lb-hls.cdn.bg/2032/fls/HrBotev.stream/playlist.m3u8"
+    },
+    {
+      "id": "sofia",
+      "name": "БНР · Радио София",
+      "url": "https://lb-hls.cdn.bg/2032/fls/Sofia.stream/playlist.m3u8"
+    },
+    {
+      "id": "plovdiv",
+      "name": "БНР · Радио Пловдив",
+      "url": "https://lb-hls.cdn.bg/2032/fls/Plovdiv.stream/playlist.m3u8"
+    },
+    {
+      "id": "varna",
+      "name": "БНР · Радио Варна",
+      "url": "https://lb-hls.cdn.bg/2032/fls/Varna.stream/playlist.m3u8"
+    },
+    {
+      "id": "burgas",
+      "name": "БНР · Радио Бургас",
+      "url": "https://lb-hls.cdn.bg/2032/fls/Burgas.stream/playlist.m3u8"
+    },
+    {
+      "id": "shumen",
+      "name": "БНР · Радио Шумен",
+      "url": "https://lb-hls.cdn.bg/2032/fls/Shumen.stream/playlist.m3u8"
+    },
+    {
+      "id": "stzagora",
+      "name": "БНР · Радио Стара Загора",
+      "url": "https://lb-hls.cdn.bg/2032/fls/StZagora.stream/playlist.m3u8"
+    },
+    {
+      "id": "kardzhali",
+      "name": "БНР · Радио Кърджали",
+      "url": "https://lb-hls.cdn.bg/2032/fls/Kardzhali.stream/playlist.m3u8"
+    }
+  ],
+  "tv": {
+    "smotrim": {
+      "name": "СМОТРИМ",
+      "site": "https://smotrim.ru",
+      "api": "https://player-api.smotrim.ru/api/v1",
+      "catalog": "https://smotrim.ru/catalog",
+      "note": "Официална платформа на ВГТРК",
+      "channels": [
+        {
+          "id": "270",
+          "name": "Первый канал"
+        },
+        {
+          "id": "1",
+          "name": "Россия-1"
+        },
+        {
+          "id": "3",
+          "name": "Россия-24"
+        },
+        {
+          "id": "4",
+          "name": "Россия-К (Культура)"
+        },
+        {
+          "id": "263",
+          "name": "Матч ТВ"
+        },
+        {
+          "id": "267",
+          "name": "НТВ"
+        },
+        {
+          "id": "255",
+          "name": "Пятый канал"
+        },
+        {
+          "id": "70",
+          "name": "Карусель"
+        },
+        {
+          "id": "363",
+          "name": "ОТР"
+        },
+        {
+          "id": "260",
+          "name": "ТВЦ"
+        },
+        {
+          "id": "256",
+          "name": "РЕН ТВ"
+        },
+        {
+          "id": "257",
+          "name": "СПАС"
+        },
+        {
+          "id": "258",
+          "name": "СТС"
+        },
+        {
+          "id": "250",
+          "name": "Домашний"
+        },
+        {
+          "id": "264",
+          "name": "ТВ-3"
+        },
+        {
+          "id": "265",
+          "name": "Пятница!"
+        },
+        {
+          "id": "251",
+          "name": "Звезда"
+        },
+        {
+          "id": "253",
+          "name": "Мир"
+        },
+        {
+          "id": "266",
+          "name": "ТНТ"
+        },
+        {
+          "id": "254",
+          "name": "МУЗ-ТВ"
+        }
+      ]
+    },
+    "smotret": {
+      "name": "smotret.tv",
+      "site": "https://smotret.tv",
+      "note": "Агрегатор на официални плейъри (Rutube, OK.ru, 1tv, ...)"
+    }
+  }
+}

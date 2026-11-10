@@ -1,0 +1,21 @@
+<settings>
+    <category label="Съдържание">
+        <setting id="show_bg" type="bool" label="Български новини" default="true"/>
+        <setting id="show_ru" type="bool" label="Руски новини" default="true"/>
+        <setting id="news_per_source" type="slider" label="Заглавия от един източник" default="12" range="4,4,40" option="int"/>
+        <setting id="cache_minutes" type="slider" label="Кеш на новините (минути)" default="10" range="1,1,120" option="int"/>
+        <setting id="news_sources" type="text" label="Само тези източници (id, разделени със запетая)" default="" option="text"/>
+    </category>
+    <category label="Плейър">
+        <setting id="youtube_mode" type="enum" label="YouTube" values="Автоматично (през добавката YouTube)|Само в браузър" default="0"/>
+    </category>
+    <category label="Други">
+        <setting id="clear_cache" type="action" label="Изчисти кеша" action="RunPlugin(plugin://plugin.video.kinohronika/?action=clear_cache)"/>
+    </category>
+    <category label="KinoGo">
+        <setting id="debug" type="bool" label="KinoGo: журнал отладки" default="false"/>
+        <setting id="timeout" type="slider" label="KinoGo: време за изчакване (секунди)" default="30" range="10,5,60" option="int"/>
+        <setting id="cache_ttl" type="slider" label="KinoGo: кеш (минути)" default="30" range="0,5,120" option="int"/>
+        <setting id="mirror" type="select" label="KinoGo: сайт" values="auto|kinogo.org|kinogo.la" default="auto"/>
+    </category>
+</settings>

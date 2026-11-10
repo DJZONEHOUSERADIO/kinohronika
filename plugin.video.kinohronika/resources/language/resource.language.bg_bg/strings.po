@@ -1,0 +1,104 @@
+# Kodi Media Center language file
+msgid ""
+msgstr ""
+"Project-Id-Version: plugin.video.kinogo\n"
+"Language: bg_BG\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgctxt "#30001"
+msgid "General"
+msgstr "Общи"
+
+msgctxt "#30002"
+msgid "Enable debug logging"
+msgstr "Включи debug логване"
+
+msgctxt "#30003"
+msgid "HTTP timeout (seconds)"
+msgstr "HTTP timeout (секунди)"
+
+msgctxt "#30004"
+msgid "Cache TTL (minutes)"
+msgstr "Кеш TTL (минути)"
+
+msgctxt "#30005"
+msgid "Site mirror"
+msgstr "Огледало на сайта"
+
+msgctxt "#30100"
+msgid "New releases"
+msgstr "Новинки"
+
+msgctxt "#30101"
+msgid "Premieres"
+msgstr "Премиери"
+
+msgctxt "#30102"
+msgid "Films"
+msgstr "Филми"
+
+msgctxt "#30103"
+msgid "Series"
+msgstr "Сериали"
+
+msgctxt "#30104"
+msgid "Cartoons"
+msgstr "Анимации"
+
+msgctxt "#30105"
+msgid "Anime"
+msgstr "Аниме"
+
+msgctxt "#30106"
+msgid "TV shows"
+msgstr "ТВ предавания"
+
+msgctxt "#30107"
+msgid "TOP"
+msgstr "ТОП"
+
+msgctxt "#30108"
+msgid "Collections"
+msgstr "Подборки"
+
+msgctxt "#30109"
+msgid "Search"
+msgstr "Търсене"
+
+msgctxt "#30110"
+msgid "All series"
+msgstr "Всички сериали"
+
+msgctxt "#30111"
+msgid "All films"
+msgstr "Всички филми"
+
+msgctxt "#30112"
+msgid "Next page (%s)"
+msgstr "Следваща страница (%s)"
+
+msgctxt "#30113"
+msgid "No items found."
+msgstr "Няма намерени елементи."
+
+msgctxt "#30114"
+msgid "Season %s (%s eps)"
+msgstr "Сезон %s (%s еп.)"
+
+msgctxt "#30115"
+msgid "Watch: %s"
+msgstr "Гледай: %s"
+
+msgctxt "#30117"
+msgid "Select source"
+msgstr "Избери източник"
+
+msgctxt "#30120"
+msgid "Error"
+msgstr "Грешка"
+
+msgctxt "#30121"
+msgid "Failed to resolve video stream."
+msgstr "Неуспешно извличане на видео поток."
